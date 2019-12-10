@@ -166,3 +166,9 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2018-09-17  8:18:38
+
+GRANT CREATE, INSERT, SELECT, UPDATE ON saboroso.* TO 'user'@'%';
+FLUSH PRIVILEGES;
+
+/* IF HAS TROUBLES TO CONNECT DATABASE TO NODE */
+/* ALTER USER 'user'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
