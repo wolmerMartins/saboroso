@@ -1,19 +1,18 @@
 var express = require('express');
 var router = express.Router();
 
-const db = require('../inc/db');
+const api = require('../inc/api');
 
 const TITLE = 'Restaurante Saboroso!';
-const QUERY = 'SELECT * FROM tb_menus ORDER BY title';
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  db.query(QUERY, (err, results) => {
-    if (err) return console.log(err);
+router.get('/', async function(req, res, next) {
+  try {
+    let menus = await api.getMenus();
 
     res.render('index', {
+      menus,
       title: TITLE,
-      menus: results,
       features: [
         {
           icon: 'ti-face-smile',
@@ -29,7 +28,9 @@ router.get('/', function(req, res, next) {
         }
       ]
     });
-  });
+  } catch(err) {
+    console.log(err);
+  }
 });
 
 router.get('/contacts', function(req, res, next) {
@@ -40,17 +41,19 @@ router.get('/contacts', function(req, res, next) {
   });
 });
 
-router.get('/menus', function(req, res, next) {
-  db.query(QUERY, (err, results) => {
-    if (err) return console.log(err)
+router.get('/menus', async function(req, res, next) {
+  try {
+    let menus = await api.getMenus();
     
     res.render('menu', {
-      menus: results,
+      menus,
       title: `Menu | ${TITLE}`,
       h1: 'Saboreie nosso menu!',
       background: 'images/img_bg_1.jpg'
     });
-  });
+  } catch(err) {
+    console.log(err);
+  }
 });
 
 router.get('/reservations', function(req, res, next) {
