@@ -13,6 +13,7 @@ router.get('/', async function(req, res, next) {
     res.render('index', {
       menus,
       title: TITLE,
+      isHome: true,
       features: [
         {
           icon: 'ti-face-smile',
