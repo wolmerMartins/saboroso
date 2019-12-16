@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const api = require('../inc/api');
+const reservations = require('../inc/reservations');
 
 const TITLE = 'Restaurante Saboroso!';
 
@@ -58,10 +59,21 @@ router.get('/menus', async function(req, res, next) {
 });
 
 router.get('/reservations', function(req, res, next) {
-  res.render('reservation', {
-    title: `Reservas | ${TITLE}`,
-    h1: 'Reserve uma Mesa!',
-    background: 'images/img_bg_2.jpg'
+  reservations.render(req, res, TITLE);
+});
+
+router.post('/reservations', function(req, res, next) {
+  if (!req.body.name) return reservations.render(req, res, TITLE, 'Digite o nome');
+  if (!req.body.email) return reservations.render(req, res, TITLE, 'Digite o e-mail');
+  if (!req.body.people) return reservations.render(req, res, TITLE, 'Informe quantas pessoas');
+  if (!req.body.date) return reservations.render(req, res, TITLE, 'Informe a data');
+  if (!req.body.time) return reservations.render(req, res, TITLE, 'Informe o horário');
+
+  reservations.save(req.body).then(results => {
+    req.body = {};
+    reservations.render(req, res, TITLE, null, 'Reserva realizada com sucesso!')
+  }).catch(err => {
+    reservations.render(req, res, TITLE, err.message, null)
   });
 });
 
