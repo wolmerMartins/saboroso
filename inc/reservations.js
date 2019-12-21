@@ -1,32 +1,21 @@
-const db = require('./db');
+const Utils = require('./utils');
+const controller = require('./controller');
+
+const PAGE = 'reservation';
+const TITLE = 'Reservas';
+const SUBTITLE = 'Reserve uma mesa!';
+const BACKGROUND = 2;
+const TABLE = 'tb_reservations';
+const FIELDS = ['name', 'email', 'people', 'date', 'time'];
 
 module.exports = {
-    render(req, res, title, error, success) {
-        res.render('reservation', {
-            title: `Reservas | ${title}`,
-            h1: 'Reserve uma mesa!',
-            background: 'images/img_bg_2.jpg',
-            body: req.body,
-            error,
-            success
-        });
+    render(req, res, message, error) {
+        controller.render(req, res, PAGE, TITLE, SUBTITLE, BACKGROUND, message, error);
     },
-    save(fields) {
-        return new Promise((resolve, reject) => {
-            let date = fields.date.split('/');
-            fields.date = `${date[2]}-${date[1]}-${date[0]}`;
-    
-            db.query('INSERT INTO tb_reservations (name, email, people, date, time) ' +
-                'VALUES (?, ?, ?, ?, ?)', [
-                    fields.name,
-                    fields.email,
-                    fields.people,
-                    fields.date,
-                    fields.time
-                ], (err, results) => {
-                    if (err) return reject(err);
-                    resolve(results);
-                });
-        });
+    save(body) {
+        body.date = Utils.formatDateToBD(body.date);
+        const dbObj = Utils.setDBObject(TABLE, FIELDS, body);
+
+        return controller.save(dbObj);
     }
 }

@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const api = require('../inc/api');
+const Utils = require('../inc/utils');
 const contacts = require('../inc/contacts');
 const reservations = require('../inc/reservations');
 
@@ -72,17 +73,18 @@ router.get('/reservations', function(req, res, next) {
 });
 
 router.post('/reservations', function(req, res, next) {
-  if (!req.body.name) return reservations.render(req, res, TITLE, 'Digite o nome');
-  if (!req.body.email) return reservations.render(req, res, TITLE, 'Digite o e-mail');
-  if (!req.body.people) return reservations.render(req, res, TITLE, 'Informe quantas pessoas');
-  if (!req.body.date) return reservations.render(req, res, TITLE, 'Informe a data');
-  if (!req.body.time) return reservations.render(req, res, TITLE, 'Informe o horário');
+  if (!req.body.name) return reservations.render(req, res, 'Digite o nome', true);
+  if (!req.body.email) return reservations.render(req, res, 'Digite o e-mail', true);
+  if (!req.body.people) return reservations.render(req, res, 'Informe quantas pessoas', true);
+  if (!req.body.date) return reservations.render(req, res, 'Informe a data', true);
+  if (!req.body.time) return reservations.render(req, res, 'Informe o horário', true);
 
   reservations.save(req.body).then(results => {
     req.body = {};
-    reservations.render(req, res, TITLE, null, 'Reserva realizada com sucesso!')
+    reservations.render(req, res, 'Reserva realizada com sucesso!')
   }).catch(err => {
-    reservations.render(req, res, TITLE, err.message, null)
+    req.body.date = Utils.formatDateToView(req.body.date);
+    reservations.render(req, res, err.message, true)
   });
 });
 

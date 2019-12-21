@@ -19,6 +19,16 @@ class Utils {
             columns: Utils.setColumns(fields)
         }
     }
+
+    static formatDateToBD(date) {
+        let dt = date.split('/');
+        return `${dt[2]}-${dt[1]}-${dt[0]}`;
+    }
+
+    static formatDateToView(date) {
+        let dt = date.split('-');
+        return `${dt[2]}/${dt[1]}/${dt[0]}`;
+    }
 }
 
 module.exports = Utils;
