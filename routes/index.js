@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const api = require('../inc/api');
+const contacts = require('../inc/contacts');
 const reservations = require('../inc/reservations');
 
 const TITLE = 'Restaurante Saboroso!';
@@ -36,11 +37,19 @@ router.get('/', async function(req, res, next) {
 });
 
 router.get('/contacts', function(req, res, next) {
-  res.render('contact', {
-    title: `Contato | ${TITLE}`,
-    h1: 'Diga um oi!',
-    background: 'images/img_bg_3.jpg'
-  });
+  contacts.render(req, res);
+});
+
+router.post('/contacts', function(req, res, next) {
+  if (!req.body.name) return contacts.render(req, res, 'Digite o nome', true);
+  if (!req.body.email) return contacts.render(req, res, 'Digite o e-mail', true);
+  if (!req.body.message) return contacts.render(req, res, 'Digite a mensagem', true);
+
+  contacts.save(req.body)
+    .then(results => {
+      req.body = {};
+      contacts.render(req, res, 'Contato enviado com sucesso!')
+    }).catch(err => contacts.render(req, res, err.message, true))
 });
 
 router.get('/menus', async function(req, res, next) {

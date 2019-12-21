@@ -1,0 +1,5 @@
+<% if (typeof message === 'string') { %>
+    <div class="<%= (typeof error === 'boolean' && error) ? 'alert alert-danger' : 'alert alert-success' %>">
+        <%= message %>
+    </div>
+<% } %>
