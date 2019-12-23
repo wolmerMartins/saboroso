@@ -69,7 +69,7 @@ router.get('/menus', async function(req, res, next) {
 });
 
 router.get('/reservations', function(req, res, next) {
-  reservations.render(req, res, TITLE);
+  reservations.render(req, res);
 });
 
 router.post('/reservations', function(req, res, next) {
