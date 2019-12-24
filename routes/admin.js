@@ -3,6 +3,14 @@ const router = express.Router();
 
 const users = require('../inc/users');
 
+router.use(function(req, res, next) {
+    if (!['/login'].includes(req.url) && !req.session.user) {
+        return res.redirect('/admin/login');
+    }
+
+    next();
+});
+
 router.get('/contacts', function(req, res, next) {
     res.render('admin/contacts');
 });
@@ -28,6 +36,11 @@ router.post('/login', function(req, res, next) {
             req.session.user = user;
             res.redirect('/admin');
         }).catch(err => users.render(req, res, err.message, true));
+});
+
+router.get('/logout', function(req, res, next) {
+    delete req.session.user;
+    res.redirect('/admin/login')
 });
 
 router.get('/menus', function(req, res, next) {
