@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const users = require('../inc/users');
+
 router.get('/contacts', function(req, res, next) {
     res.render('admin/contacts');
 });
@@ -14,9 +16,18 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/login', function(req, res, next) {
-    if (!req.session.views) req.session.views = 0;
-    console.log(req.session.views++);
-    res.render('admin/login');
+    users.render(req, res);
+});
+
+router.post('/login', function(req, res, next) {
+    if (!req.body.email) return users.render(req, res, 'Informe o e-mail', true);
+    if (!req.body.password) return users.render(req, res, 'Informe a senha', true);
+
+    users.login(req.body)
+        .then(user => {
+            req.session.user = user;
+            res.redirect('/admin');
+        }).catch(err => users.render(req, res, err.message, true));
 });
 
 router.get('/menus', function(req, res, next) {

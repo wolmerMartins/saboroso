@@ -19,5 +19,18 @@ module.exports = {
                     resolve(results);
                 });
         });
+    },
+    login(body) {
+        return new Promise((resolve, reject) => {
+            db.query('SELECT * FROM tb_users WHERE email = ?', [ body.email ], (err, results) => {
+                if (err) return reject(err);
+                if (!results.length) return reject(new Error('Usuário ou senha incorretos'));
+
+                let row = results[0];
+
+                if (row.password !== body.password) return reject(new Error('Usuário ou senha incorretos'));
+                resolve(row);
+            });
+        });
     }
 }
