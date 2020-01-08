@@ -3,6 +3,7 @@ const router = express.Router();
 
 const admin = require('../inc/admin');
 const users = require('../inc/users');
+const api = require('../inc/api');
 
 router.use(function(req, res, next) {
     if (!['/login'].includes(req.url) && !req.session.user) {
@@ -30,7 +31,17 @@ router.get('/emails', function(req, res, next) {
 });
 
 router.get('/', function(req, res, next) {
-    res.render('admin/index', admin.getParams(req));
+    admin.dashboard().then(data => {
+        res.render('admin/index', admin.getParams(req, { data }));
+    }).catch(err => {
+        console.error(err);
+        res.render('admin/index', admin.getParams(req, { data: {
+            nrcontacts: 0,
+            nrmenus: 0,
+            nrreservations: 0,
+            nrusers: 0
+        }}))
+    });
 });
 
 router.get('/login', function(req, res, next) {
@@ -54,7 +65,12 @@ router.get('/logout', function(req, res, next) {
 });
 
 router.get('/menus', function(req, res, next) {
-    res.render('admin/menus', admin.getParams(req));
+    api.getMenus().then(data => {
+        res.render('admin/menus', admin.getParams(req, { menus: data }));
+    }).catch(err => {
+        console.error(err);
+        res.render('admin/menus', admin.getParams(req, { menus: [] }));
+    });
 });
 
 router.get('/reservations', function(req, res, next) {

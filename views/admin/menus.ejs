@@ -36,16 +36,18 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1.</td>
-                <td><img src="dist/img/boxed-bg.jpg" alt="" style="height: 18px;"></td>
-                <td>Update software</td>
-                <td>Diuretics paradis num copo é motivis de denguis.</td>
-                <td>R$1,99</td>
+              <% menus.forEach(menu => { %>
+              <tr data-menu="<%= JSON.stringify(menu) %>">
+                <td><%= menu.id %></td>
+                <td><img src="/<%= menu.photo %>" alt="" style="height: 18px;"></td>
+                <td><%= menu.title %></td>
+                <td><%= menu.description %></td>
+                <td>R$ <%= menu.price %></td>
                 <td><button type="button" class="btn btn-xs btn-info btn-update" data-toggle="modal" data-target="#modal-update"><i
                       class="fa fa-pencil"></i> Editar</button>&nbsp;<button type="button" class="btn btn-xs btn-danger btn-delete"><i
                       class="fa fa-trash"></i> Excluir</button></td>
               </tr>
+              <% }) %>
             </tbody>
           </table>
         </div>
