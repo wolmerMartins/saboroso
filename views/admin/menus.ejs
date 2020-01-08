@@ -36,13 +36,13 @@
               </tr>
             </thead>
             <tbody>
-              <% menus.forEach(menu => { %>
-              <tr data-menu="<%= JSON.stringify(menu) %>">
-                <td><%= menu.id %></td>
-                <td><img src="/<%= menu.photo %>" alt="" style="height: 18px;"></td>
-                <td><%= menu.title %></td>
-                <td><%= menu.description %></td>
-                <td>R$ <%= menu.price %></td>
+              <% rows.forEach(row => { %>
+              <tr data-row="<%= JSON.stringify(row) %>">
+                <td><%= row.id %></td>
+                <td><img src="/<%= row.photo %>" alt="" style="height: 18px;"></td>
+                <td><%= row.title %></td>
+                <td><%= row.description %></td>
+                <td>R$ <%= row.price %></td>
                 <td><button type="button" class="btn btn-xs btn-info btn-update" data-toggle="modal" data-target="#modal-update"><i
                       class="fa fa-pencil"></i> Editar</button>&nbsp;<button type="button" class="btn btn-xs btn-danger btn-delete"><i
                       class="fa fa-trash"></i> Excluir</button></td>

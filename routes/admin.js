@@ -66,10 +66,10 @@ router.get('/logout', function(req, res, next) {
 
 router.get('/menus', function(req, res, next) {
     api.getMenus().then(data => {
-        res.render('admin/menus', admin.getParams(req, { menus: data }));
+        res.render('admin/menus', admin.getParams(req, { rows: data }));
     }).catch(err => {
         console.error(err);
-        res.render('admin/menus', admin.getParams(req, { menus: [] }));
+        res.render('admin/menus', admin.getParams(req, { rows: [] }));
     });
 });
 
