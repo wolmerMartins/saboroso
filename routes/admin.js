@@ -9,6 +9,10 @@ router.use(function(req, res, next) {
         return res.redirect('/admin/login');
     }
 
+    if (['/login'].includes(req.url) && req.session.user) {
+        return res.redirect('/admin/');
+    }
+
     next();
 });
 
