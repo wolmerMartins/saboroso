@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const api = require('../inc/api');
+const menu = require('../inc/menus');
 const Utils = require('../inc/utils');
 const contacts = require('../inc/contacts');
 const reservations = require('../inc/reservations');
@@ -11,7 +11,7 @@ const TITLE = 'Restaurante Saboroso!';
 /* GET home page. */
 router.get('/', async function(req, res, next) {
   try {
-    let menus = await api.getMenus();
+    let menus = await menu.getMenus();
 
     res.render('index', {
       menus,
@@ -55,7 +55,7 @@ router.post('/contacts', function(req, res, next) {
 
 router.get('/menus', async function(req, res, next) {
   try {
-    let menus = await api.getMenus();
+    let menus = await menu.getMenus();
     
     res.render('menu', {
       menus,

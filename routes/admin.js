@@ -3,7 +3,7 @@ const router = express.Router();
 
 const admin = require('../inc/admin');
 const users = require('../inc/users');
-const api = require('../inc/api');
+const menu = require('../inc/menus');
 
 router.use(function(req, res, next) {
     if (!['/login'].includes(req.url) && !req.session.user) {
@@ -65,7 +65,7 @@ router.get('/logout', function(req, res, next) {
 });
 
 router.get('/menus', function(req, res, next) {
-    api.getMenus().then(data => {
+    menu.getMenus().then(data => {
         res.render('admin/menus', admin.getParams(req, { rows: data }));
     }).catch(err => {
         console.error(err);
@@ -74,7 +74,7 @@ router.get('/menus', function(req, res, next) {
 });
 
 router.post('/menus', function(req, res, next) {
-    api.save(req.fields, req.files)
+    menu.save(req.fields, req.files)
         .then(results => res.send(results))
         .catch(err => res.send(err));
 });
