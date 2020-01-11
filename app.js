@@ -20,6 +20,8 @@ var client = redis.createClient({
 
 app.use(function(req, res, next) {
   if (req.method === 'POST') {
+    if (['/admin/login'].includes(req.url)) return next();
+
     var form = formidable.IncomingForm({
       uploadDir: path.join(__dirname, '/public/images'),
       keepExtensions: true
