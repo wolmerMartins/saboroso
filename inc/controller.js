@@ -20,6 +20,15 @@ module.exports = {
                 });
         });
     },
+    update(dbObj) {
+        return new Promise((resolve, reject) => {
+            db.query(`UPDATE ${dbObj.table} SET ${dbObj.update} WHERE id = ${dbObj.id}`,
+                dbObj.values, (err, results) => {
+                    if (err) reject(err);
+                    resolve(results);
+                });
+        });
+    },
     login(body) {
         return new Promise((resolve, reject) => {
             db.query('SELECT * FROM tb_users WHERE email = ?', [ body.email ], (err, results) => {
