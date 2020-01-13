@@ -17,8 +17,15 @@ module.exports = {
         })
     },
     save(fields, files) {
+        let dbObj;
         fields.photo = `images/${path.parse(files.photo.path).base}`;
-        const dbObj = Utils.setDBObject(MENU_TABLE, MENU_FIELDS, fields);
+        
+        if (fields.id) {
+            dbObj = Utils.setDBObject('update', MENU_TABLE, fields);
+            return controller.update(dbObj);
+        }
+        
+        dbObj = Utils.setDBObject('save', MENU_TABLE, MENU_FIELDS, fields);
         return controller.save(dbObj);
     }
 }
