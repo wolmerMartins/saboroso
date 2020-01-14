@@ -159,7 +159,7 @@
   let formUpdate = document.querySelector('#modal-update form');
   formUpdate.save()
     .then(json => window.location.reload())
-    .catch(err => console.log(err));
+    .catch(err => console.log('update form error', err));
 
   document.querySelectorAll('.btn-update').forEach(btn => {
     btn.addEventListener('click', e => {
