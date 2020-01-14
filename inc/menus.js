@@ -18,7 +18,7 @@ module.exports = {
     },
     save(fields, files) {
         let dbObj;
-        fields.photo = `images/${path.parse(files.photo.path).base}`;
+        if (files.photo.size) fields.photo = `images/${path.parse(files.photo.path).base}`;
         
         if (fields.id) {
             dbObj = Utils.setDBObject('update', MENU_TABLE, fields);
