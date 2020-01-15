@@ -43,9 +43,13 @@
                 <td><%= row.title %></td>
                 <td><%= row.description %></td>
                 <td>R$ <%= row.price %></td>
-                <td><button type="button" class="btn btn-xs btn-info btn-update"><i
-                      class="fa fa-pencil"></i> Editar</button>&nbsp;<button type="button" class="btn btn-xs btn-danger btn-delete"><i
-                      class="fa fa-trash"></i> Excluir</button></td>
+                <td>
+                  <button type="button" class="btn btn-xs btn-info btn-update">
+                    <i class="fa fa-pencil"></i> Editar
+                  </button>&nbsp;
+                  <button type="button" class="btn btn-xs btn-danger btn-delete">
+                    <i class="fa fa-trash"></i> Excluir
+                  </button></td>
               </tr>
               <% }) %>
             </tbody>
@@ -180,6 +184,21 @@
       }
 
       $('#modal-update').modal('show');
+    });
+  });
+
+  document.querySelectorAll('.btn-delete').forEach(btn => {
+    btn.addEventListener('click', e => {
+      let tr = e.path.find(el => el.tagName.toUpperCase() === 'TR');
+      let data = JSON.parse(tr.dataset.row);
+
+      if (confirm('Deseja realmente excluir esse prato?')) {
+        fetch(`/admin/menus/${data.id}`, {
+          method: 'delete',
+        }).then(response => response.json())
+          .then(json => window.location.reload())
+          .catch(err => console.log('delete menu', err));
+      }
     });
   });
 </script>
