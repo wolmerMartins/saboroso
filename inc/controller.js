@@ -29,6 +29,14 @@ module.exports = {
                 });
         });
     },
+    delete(dbObj) {
+        return new Promise((resolve, reject) => {
+            db.query(`DELETE FROM ${dbObj.table} WHERE id = ?`, [dbObj.id], (err, results) => {
+                if (err) return reject(err);
+                resolve(results);
+            });
+        });
+    },
     login(body) {
         return new Promise((resolve, reject) => {
             db.query('SELECT * FROM tb_users WHERE email = ?', [ body.email ], (err, results) => {
