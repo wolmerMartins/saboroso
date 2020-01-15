@@ -27,5 +27,8 @@ module.exports = {
         
         dbObj = Utils.setDBObject('save', MENU_TABLE, MENU_FIELDS, fields);
         return controller.save(dbObj);
+    },
+    delete(id) {
+        return controller.delete({ id, table: MENU_TABLE });
     }
 }
