@@ -12,6 +12,9 @@ module.exports = {
     render(req, res, message, error) {
         controller.render(req, res, PAGE, TITLE, SUBTITLE, BACKGROUND, message, error);
     },
+    getReservations() {
+        return controller.getData(TABLE, 'date');
+    },
     save(body) {
         if (~body.date.indexOf('/')) body.date = Utils.formatUSDateToDB(body.date);
         const dbObj = Utils.setDBObject(Utils.getSaveType(), TABLE, FIELDS, body);
