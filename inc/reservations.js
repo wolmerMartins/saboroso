@@ -13,8 +13,8 @@ module.exports = {
         controller.render(req, res, PAGE, TITLE, SUBTITLE, BACKGROUND, message, error);
     },
     save(body) {
-        body.date = Utils.formatDateToBD(body.date);
-        const dbObj = Utils.setDBObject(TABLE, FIELDS, body);
+        if (~body.date.indexOf('/')) body.date = Utils.formatUSDateToDB(body.date);
+        const dbObj = Utils.setDBObject(Utils.getSaveType(), TABLE, FIELDS, body);
 
         return controller.save(dbObj);
     }
