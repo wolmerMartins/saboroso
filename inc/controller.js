@@ -49,5 +49,13 @@ module.exports = {
                 resolve(row);
             });
         });
+    },
+    getData(table, orderBy) {
+        return new Promise((resolve, reject) => {
+            db.query(`SELECT * FROM ${table} ORDER BY ${orderBy}`, (err, results) => {
+                if (err) reject(err);
+                resolve(results);
+            });
+        });
     }
 }
