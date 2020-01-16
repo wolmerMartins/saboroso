@@ -4,6 +4,7 @@ const router = express.Router();
 const admin = require('../inc/admin');
 const users = require('../inc/users');
 const menu = require('../inc/menus');
+const reservation = require('../inc/reservations');
 
 router.use(function(req, res, next) {
     if (!['/login'].includes(req.url) && !req.session.user) {
@@ -89,6 +90,12 @@ router.get('/reservations', function(req, res, next) {
     res.render('admin/reservations', admin.getParams(req, {
         date: {}
     }));
+});
+
+router.post('/reservations', function(req, res, next) {
+    reservation.save(req.fields, req.files)
+        .then(results => res.send(results))
+        .catch(err => res.send(err));
 });
 
 router.get('/users', function(req, res, next) {
