@@ -21,8 +21,12 @@ class Utils {
         return values;
     }
 
+    static getSaveType() {
+        return 'save';
+    }
+
     static setDBObject(type, table, fields, body) {
-        if (type === 'save') {
+        if (type === Utils.getSaveType()) {
             return {
                 table,
                 fields: fields.join(','),
