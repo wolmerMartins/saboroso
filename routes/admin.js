@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const moment = require('moment');
 
 const admin = require('../inc/admin');
 const users = require('../inc/users');
 const menu = require('../inc/menus');
 const reservation = require('../inc/reservations');
+
+moment.locale('pt-BR');
 
 router.use(function(req, res, next) {
     if (!['/login'].includes(req.url) && !req.session.user) {
@@ -90,7 +93,8 @@ router.get('/reservations', function(req, res, next) {
     reservation.getReservations().then(reservations => {
         res.render('admin/reservations', admin.getParams(req, {
             reservations,
-            date: {}
+            date: {},
+            moment
         }));
     });
 });
