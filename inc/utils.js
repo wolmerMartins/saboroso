@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 class Utils {
     static setFieldsToUpdate(fields) {
         let update = [];
@@ -21,6 +23,10 @@ class Utils {
         return values;
     }
 
+    static getUpdateType() {
+        return 'update';
+    }
+
     static getSaveType() {
         return 'save';
     }
@@ -33,7 +39,7 @@ class Utils {
                 values: Utils.setValuesToPersist(body),
                 columns: Utils.setColumns(fields)
             }
-        } else if (type === 'update') {
+        } else if (type === Utils.getUpdateType()) {
             const id = fields.id;
             delete fields.id;
             
@@ -47,13 +53,11 @@ class Utils {
     }
 
     static formatDateToBD(date) {
-        let dt = date.split('/');
-        return `${dt[2]}-${dt[1]}-${dt[0]}`;
+        return moment(date).format('YYYY-MM-DD');
     }
 
     static formatDateToView(date) {
-        let dt = date.split('-');
-        return `${dt[2]}/${dt[1]}/${dt[0]}`;
+        return moment(date).format('DD/MM/YYYY');
     }
 }
 
