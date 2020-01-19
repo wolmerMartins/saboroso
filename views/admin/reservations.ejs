@@ -236,4 +236,19 @@
       $('#modal-update').modal('show');
     });
   });
+
+  document.querySelectorAll('.btn-delete').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const tr = e.path.find(el => el.tagName === 'TR');
+      const data = JSON.parse(tr.dataset.reservation);
+
+      if (confirm('Você realmente deseja excluir essa reserva?')) {
+        fetch(`/admin/reservations/${data.id}`, {
+          method: 'delete'
+        }).then(response => response.json())
+          .then(json => window.location.reload())
+          .catch(err => console.log('Error deleting reservation', err));
+      }
+    });
+  });
 </script>
