@@ -26,5 +26,8 @@ module.exports = {
         
         dbObj = Utils.setDBObject(Utils.getSaveType(), TABLE, FIELDS, body);
         return controller.save(dbObj);
+    },
+    delete(id) {
+        return controller.delete({ table: TABLE, id });
     }
 }
