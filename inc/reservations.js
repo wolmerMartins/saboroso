@@ -16,9 +16,15 @@ module.exports = {
         return controller.getData(TABLE, 'date');
     },
     save(body) {
+        let dbObj = {};
         if (~body.date.indexOf('/')) body.date = Utils.formatUSDateToDB(body.date);
-        const dbObj = Utils.setDBObject(Utils.getSaveType(), TABLE, FIELDS, body);
 
+        if (body.id) {
+            dbObj = Utils.setDBObject(Utils.getUpdateType(), TABLE, body);
+            return controller.update(dbObj);
+        }
+        
+        dbObj = Utils.setDBObject(Utils.getSaveType(), TABLE, FIELDS, body);
         return controller.save(dbObj);
     }
 }
