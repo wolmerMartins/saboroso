@@ -105,6 +105,14 @@ router.post('/reservations', function(req, res, next) {
         .catch(err => res.send(err));
 });
 
+router.delete('/reservations/:id', function(req, res, next) {
+    let { id } = req.params;
+
+    reservation.delete(id)
+        .then(results => res.send(results))
+        .catch(err => res.send(err));
+});
+
 router.get('/users', function(req, res, next) {
     res.render('admin/users', admin.getParams(req));
 });
