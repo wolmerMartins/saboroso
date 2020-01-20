@@ -203,52 +203,11 @@
 
 <script src="/js/moment.min.js"></script>
 <script src="/js/hcode-form-save.js"></script>
+<script src="/js/hcode-grid.js"></script>
 
 <script>
-  const formCreate = document.querySelector('#modal-create form');
-  formCreate.save()
-    .then(json => window.location.reload())
-    .catch(err => console.log('error creating reservation', err));
-
-  const formUpdate = document.querySelector('#modal-update form');
-  formUpdate.save()
-    .then(json => window.location.reload())
-    .catch(err => console.log('error updating reservation', err));
-
-  document.querySelectorAll('.btn-update').forEach(btn => {
-    btn.addEventListener('click', e => {
-      const tr = e.path.find(el => el.tagName === 'TR');
-      const data = JSON.parse(tr.dataset.reservation);
-      
-      for (let name in data) {
-        const input = formUpdate.querySelector(`[name=${name}]`);
-        if (!input) continue;
-
-        switch(name) {
-          case 'date':
-            input.value = moment(data[name]).add(1, 'days').format('YYYY-MM-DD');
-            break;
-          default:
-            input.value = data[name];
-        }
-      }
-
-      $('#modal-update').modal('show');
-    });
-  });
-
-  document.querySelectorAll('.btn-delete').forEach(btn => {
-    btn.addEventListener('click', e => {
-      const tr = e.path.find(el => el.tagName === 'TR');
-      const data = JSON.parse(tr.dataset.reservation);
-
-      if (confirm('Você realmente deseja excluir essa reserva?')) {
-        fetch(`/admin/reservations/${data.id}`, {
-          method: 'delete'
-        }).then(response => response.json())
-          .then(json => window.location.reload())
-          .catch(err => console.log('Error deleting reservation', err));
-      }
-    });
+  new HcodeGrid({
+    deleteMsg: 'essa reserva',
+    deleteUrl: '/admin/reservations'
   });
 </script>
