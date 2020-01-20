@@ -1,5 +1,9 @@
 class HcodeGrid {
     constructor(config) {
+        config.listeners = Object.assign({
+            afterUpdateClick: e => $('#modal-update').modal('show')
+        }, config.listeners);
+        
         this.options = Object.assign({}, {
             btnUpdate: '.btn-update',
             btnDelete: '.btn-delete',
@@ -25,9 +29,17 @@ class HcodeGrid {
           .catch(err => console.log('error updating reservation', err));
     }
 
+    fireEvent(name, args) {
+        if (typeof this.options.listeners[name] === 'function') {
+            this.options.listeners[name].apply(this, args);
+        }
+    }
+
     initUpdateButtons() {
         document.querySelectorAll(this.options.btnUpdate).forEach(btn => {
           btn.addEventListener('click', e => {
+            this.fireEvent('beforeUpdateClick', [e]);
+
             const tr = e.path.find(el => el.tagName === 'TR');
             const data = JSON.parse(tr.dataset.reservation);
             
@@ -44,7 +56,7 @@ class HcodeGrid {
               }
             }
       
-            $(this.options.modalUpdate).modal('show');
+            this.fireEvent('afterUpdateClick', [e]);
           });
         });
     }
