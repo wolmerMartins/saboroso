@@ -150,55 +150,16 @@
 
 <script src="/js/hcode-file-reader.js"></script>
 <script src="/js/hcode-form-save.js"></script>
+<script src="/js/hcode-grid.js"></script>
 
 <script>
   new HcodeFileReader('#modal-create [type=file]', '#modal-create img', '#photo-create-error');
   new HcodeFileReader('#modal-update [type=file]', '#modal-update img', '#photo-update-error');
 
-  let formCreate = document.querySelector('#modal-create form');
-  formCreate.save()
-    .then(json => window.location.reload())
-    .catch(err => console.log('save form error', err));
-
-  let formUpdate = document.querySelector('#modal-update form');
-  formUpdate.save()
-    .then(json => window.location.reload())
-    .catch(err => console.log('update form error', err));
-
-  document.querySelectorAll('.btn-update').forEach(btn => {
-    btn.addEventListener('click', e => {
-      let tr = e.path.find(el => el.tagName === 'TR');
-      let data = JSON.parse(tr.dataset.row);
-
-      for (let name in data) {
-        switch(name) {
-          case 'photo':
-            let inputFile = formUpdate.querySelector(`[name=${name}]`);
-            inputFile.previousElementSibling.src = `/${data[name]}`;
-            inputFile.value = '';
-            break;
-          default:
-            let input = formUpdate.querySelector(`[name=${name}]`);
-            if (input) input.value = data[name];
-        }
-      }
-
-      $('#modal-update').modal('show');
-    });
-  });
-
-  document.querySelectorAll('.btn-delete').forEach(btn => {
-    btn.addEventListener('click', e => {
-      let tr = e.path.find(el => el.tagName.toUpperCase() === 'TR');
-      let data = JSON.parse(tr.dataset.row);
-
-      if (confirm('Deseja realmente excluir esse prato?')) {
-        fetch(`/admin/menus/${data.id}`, {
-          method: 'delete',
-        }).then(response => response.json())
-          .then(json => window.location.reload())
-          .catch(err => console.log('delete menu', err));
-      }
-    });
+  new HcodeGrid({
+    deleteUrl: '/admin/menus',
+    deleteMsg: 'esse prato do menu',
+    errorCreateMessage: 'Não foi possível incluir o prato no cardápio. Tente novamente mais tarde.',
+    errorUpdateMessage: 'Ocorreu um erro ao atualizar prato. Por favor, tente novamente mais tarde.'
   });
 </script>
