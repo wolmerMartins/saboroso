@@ -1,10 +1,26 @@
 class HcodeGrid {
     constructor(config) {
         config.listeners = Object.assign({
-            afterUpdateClick: e => $('#modal-update').modal('show')
+            afterUpdateClick: e => $('#modal-update').modal('show'),
+            afterDeleteClick: e => window.location.reload(),
+            afterDeleteClickError: err => {
+              alert('Não foi possível fazer a exclusão no momento');
+              console.log('error deleting data from DB', err);
+            },
+            afterFormCreate: json => window.location.reload(),
+            afterFormCreateError: (err, message) => {
+              alert(message);
+              console.log('error saving data in DB', err);
+            },
+            afterFormUpdate: json => window.location.reload(),
+            afterFormUpdateError: (err, message) => {
+              alert(message);
+              console.log('error updating data from DB', err);
+            }
         }, config.listeners);
         
         this.options = Object.assign({}, {
+            data: 'row',
             btnUpdate: '.btn-update',
             btnDelete: '.btn-delete',
             modalUpdate: '#modal-update',
@@ -19,14 +35,36 @@ class HcodeGrid {
         this.initDeleteButtons();
     }
 
+    initForm(forms) {
+      forms.forEach(obj => {
+        obj.form.save()
+          .then(json => this.fireEvent(obj.event, [json]))
+          .catch(err => this.fireEvent(obj.eventError, [err, obj.errorMessage]));
+      });
+    }
+
     initForms() {
-        this.formCreate.save()
-          .then(json => window.location.reload())
-          .catch(err => console.log('error creating reservation', err));
-      
-        this.formUpdate.save()
-          .then(json => window.location.reload())
-          .catch(err => console.log('error updating reservation', err));
+      this.initForm([
+        {
+          form: this.formCreate,
+          event: 'afterFormCreate',
+          eventError: 'afterFormCreateError',
+          errorMessage: this.options.errorCreateMessage
+        },
+        {
+          form: this.formUpdate,
+          event: 'afterFormUpdate',
+          eventError: 'afterFormUpdateError',
+          errorMessage: this.options.errorUpdateMessage
+        }
+      ]);
+    }
+
+    getTrData(event) {
+      const tr = event.path.find(el => el.tagName === 'TR');
+      const data = JSON.parse(tr.dataset[this.options.data]);
+
+      return data;
     }
 
     fireEvent(name, args) {
@@ -40,8 +78,7 @@ class HcodeGrid {
           btn.addEventListener('click', e => {
             this.fireEvent('beforeUpdateClick', [e]);
 
-            const tr = e.path.find(el => el.tagName === 'TR');
-            const data = JSON.parse(tr.dataset.reservation);
+            const data = this.getTrData(e);
             
             for (let name in data) {
               const input = this.formUpdate.querySelector(`[name=${name}]`);
@@ -50,6 +87,10 @@ class HcodeGrid {
               switch(name) {
                 case 'date':
                   input.value = moment(data[name]).add(1, 'days').format('YYYY-MM-DD');
+                  break;
+                case 'photo':
+                  input.previousElementSibling.src = `/${data[name]}`;
+                  input.value = '';
                   break;
                 default:
                   input.value = data[name];
@@ -64,15 +105,16 @@ class HcodeGrid {
     initDeleteButtons() {      
         document.querySelectorAll(this.options.btnDelete).forEach(btn => {
           btn.addEventListener('click', e => {
-            const tr = e.path.find(el => el.tagName === 'TR');
-            const data = JSON.parse(tr.dataset.reservation);
+            this.fireEvent('beforeDeleteClick');
+
+            const data = this.getTrData(e);
       
             if (confirm(`Você realmente deseja excluir ${this.options.deleteMsg}?`)) {
               fetch(`${this.options.deleteUrl}/${data.id}`, {
                 method: 'delete'
               }).then(response => response.json())
-                .then(json => window.location.reload())
-                .catch(err => console.log('Error deleting reservation', err));
+                .then(json => this.fireEvent('afterDeleteClick'))
+                .catch(err => this.fireEvent('afterDeleteClickError', [err]));
             }
           });
         });
