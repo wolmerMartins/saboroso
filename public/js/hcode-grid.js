@@ -83,18 +83,8 @@ class HcodeGrid {
             for (let name in data) {
               const input = this.formUpdate.querySelector(`[name=${name}]`);
               if (!input) continue;
-      
-              switch(name) {
-                case 'date':
-                  input.value = moment(data[name]).add(1, 'days').format('YYYY-MM-DD');
-                  break;
-                case 'photo':
-                  input.previousElementSibling.src = `/${data[name]}`;
-                  input.value = '';
-                  break;
-                default:
-                  input.value = data[name];
-              }
+
+              this.options.onUpdateLoad(input, name, data);
             }
       
             this.fireEvent('afterUpdateClick', [e]);

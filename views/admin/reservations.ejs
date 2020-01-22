@@ -211,6 +211,15 @@
     deleteMsg: 'essa reserva',
     deleteUrl: '/admin/reservations',
     errorCreateMessage: 'Não foi possível criar a reserva.',
-    errorUpdateMessage: 'Ocorreu um erro tentando atualizar a reserva'
+    errorUpdateMessage: 'Ocorreu um erro tentando atualizar a reserva',
+    onUpdateLoad: (input, name, data) => {
+      switch (name) {
+        case 'date':
+          input.value = moment(data[name]).add(1, 'days').format('YYYY-MM-DD');
+          break;
+        default:
+          input.value = data[name];
+      }
+    }
   });
 </script>

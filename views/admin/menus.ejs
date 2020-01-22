@@ -160,6 +160,15 @@
     deleteUrl: '/admin/menus',
     deleteMsg: 'esse prato do menu',
     errorCreateMessage: 'Não foi possível incluir o prato no cardápio. Tente novamente mais tarde.',
-    errorUpdateMessage: 'Ocorreu um erro ao atualizar prato. Por favor, tente novamente mais tarde.'
+    errorUpdateMessage: 'Ocorreu um erro ao atualizar prato. Por favor, tente novamente mais tarde.',
+    onUpdateLoad: (input, name, data) => {
+      switch (name) {
+        case 'photo':
+          input.previousElementSibling.src = `/${data[name]}`;
+          break;
+        default:
+          input.value = data[name];
+      }
+    }
   });
 </script>
