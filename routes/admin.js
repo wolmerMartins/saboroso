@@ -121,5 +121,11 @@ router.get('/users', function(req, res, next) {
     });
 });
 
+router.post('/users', function(req, res, next) {
+    users.save(req.fields)
+        .then(results => res.send(results))
+        .catch(err => res.send(err));
+});
+
 
 module.exports = router;
