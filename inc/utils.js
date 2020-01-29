@@ -1,41 +1,50 @@
 const moment = require('moment');
 
+const COMMA = ',';
+const SAVE = 'save';
+const UPDATE = 'update';
+const INTERROGATION_MARK = '?';
+const DATE_TO_DB = 'YYYY-MM-DD';
+const DATE_TO_VIEW = 'DD/MM/YYYY';
+const CONFIRM_PASSWORD = 'passwordConfirm';
+
 class Utils {
     static setFieldsToUpdate(fields) {
         let update = [];
         
         for (let field in fields) {
-            if (fields[field]) update.push(`${field} = ?`);
+            if (field === CONFIRM_PASSWORD) continue;
+            if (fields[field]) update.push(`${field} = ${INTERROGATION_MARK}`);
         }
 
-        return update.join(',');
+        return update.join(COMMA);
     }
 
     static setColumns(fields) {
         let columns = [];
-        fields.map(field => columns.push('?'));
-        return columns.join(',');
+        fields.map(field => columns.push(INTERROGATION_MARK));
+        return columns.join(COMMA);
     }
 
     static setValuesToPersist(body) {
         let values = [];
-        Object.keys(body).map(key => body[key] ? values.push(body[key]) : '');
+        Object.keys(body).map(key => (body[key] && key !== CONFIRM_PASSWORD) ? values.push(body[key]) : '');
         return values;
     }
 
     static getUpdateType() {
-        return 'update';
+        return UPDATE;
     }
 
     static getSaveType() {
-        return 'save';
+        return SAVE;
     }
 
     static setDBObject(type, table, fields, body) {
         if (type === Utils.getSaveType()) {
             return {
                 table,
-                fields: fields.join(','),
+                fields: fields.join(COMMA),
                 values: Utils.setValuesToPersist(body),
                 columns: Utils.setColumns(fields)
             }
@@ -53,11 +62,11 @@ class Utils {
     }
 
     static formatDateToBD(date) {
-        return moment(date).format('YYYY-MM-DD');
+        return moment(date).format(DATE_TO_DB);
     }
 
     static formatDateToView(date) {
-        return moment(date).format('DD/MM/YYYY');
+        return moment(date).format(DATE_TO_VIEW);
     }
 }
 
