@@ -91,7 +91,7 @@
   <div class="modal fade" id="modal-create">
     <div class="modal-dialog">
       <div class="modal-content" style="border-top: 3px solid #00a65a;">
-        <form method="post">
+        <form method="post" action="/admin/users">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -156,3 +156,33 @@
   </div>
 
 <%- include('inc/footer') -%>
+
+<script src="/js/hcode-form-save.js"></script>
+<script src="/js/hcode-grid.js"></script>
+
+<script>
+  new HcodeGrid({
+    data: 'user',
+    deleteMsg: 'esse usuário',
+    deleteURL: '/admin/users',
+    errorUpdateMessage: 'Ocorreu um error ao atualizar o usuário',
+    errorCreateMessage: 'Não foi possível realizar o cadastro do usuário',
+    forms: {
+      formUpdatePassword: {
+        type: 'UpdatePassword',
+        name: 'FormUpdatePassword',
+        id: '#modal-update-password form'
+      }
+    },
+    btnUpdateExtra: {
+      type: 'UpdatePassword',
+      ref: '.btn-update-password'
+    },
+    onUpdateLoad: (input, name, data) => {
+      switch (name) {
+        default:
+          input.value = data[name];
+      }
+    }
+  })
+</script>
