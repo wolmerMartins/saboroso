@@ -114,7 +114,11 @@ router.delete('/reservations/:id', function(req, res, next) {
 });
 
 router.get('/users', function(req, res, next) {
-    res.render('admin/users', admin.getParams(req));
+    users.getUsers().then(users => {
+        res.render('admin/users', admin.getParams(req, {
+            users
+        }));
+    });
 });
 
 
