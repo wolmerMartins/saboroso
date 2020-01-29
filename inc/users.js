@@ -17,8 +17,14 @@ module.exports = {
         return controller.getData(TABLE, 'name');
     },
     save(body) {
-        const dbObj = Utils.setDBObject(Utils.getSaveType(), TABLE, FIELDS, body);
+        let dbObj = {};
 
+        if (body.id) {
+            dbObj = Utils.setDBObject(Utils.getUpdateType(), TABLE, body);
+            return controller.update(dbObj);
+        }
+
+        dbObj = Utils.setDBObject(Utils.getSaveType(), TABLE, FIELDS, body);
         return controller.save(dbObj);
     }
 }
