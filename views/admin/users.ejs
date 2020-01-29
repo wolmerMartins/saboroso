@@ -34,6 +34,7 @@
                 </thead>
                 <tbody>
                   <% users.forEach(user => { %>
+                  <% delete user.password %>
                     <tr data-user="<%= JSON.stringify(user) %>">
                         <td><%= user.id %></td>
                         <td><%= user.name %></td>
@@ -167,6 +168,7 @@
     deleteURL: '/admin/users',
     errorUpdateMessage: 'Ocorreu um error ao atualizar o usuário',
     errorCreateMessage: 'Não foi possível realizar o cadastro do usuário',
+    errorUpdatePasswordMessage: 'Não foi possível atualizar a senha no momento',
     forms: {
       formUpdatePassword: {
         type: 'UpdatePassword',
@@ -177,6 +179,14 @@
     btnUpdateExtra: {
       type: 'UpdatePassword',
       ref: '.btn-update-password'
+    },
+    listeners: {
+      afterUpdatePasswordClick: e => $('#modal-update-password').modal('show'),
+      afterFormUpdatePassword: json => window.location.reload(),
+      afterFormUpdatePasswordError: (err, message) => {
+        alert(message);
+        console.log('error updating data from DB', err);
+      }
     },
     onUpdateLoad: (input, name, data) => {
       switch (name) {
