@@ -18,46 +18,56 @@ class HcodeGrid {
               console.log('error updating data from DB', err);
             }
         }, config.listeners);
+
+        config.forms = Object.assign({
+          formCreate: {
+            type: 'Create',
+            name: 'FormCreate',
+            id: '#modal-create form'
+          },
+          formUpdate: {
+            type: 'Update',
+            name: 'FormUpdate',
+            id: '#modal-update form'
+          }
+        }, config.forms);
+
+        config.modals = Object.assign({
+          modalUpdate: '#modal-update'
+        }, config.modals);
         
         this.options = Object.assign({}, {
             data: 'row',
             btnUpdate: '.btn-update',
-            btnDelete: '.btn-delete',
-            modalUpdate: '#modal-update',
-            formCreate: '#modal-create form',
-            formUpdate: '#modal-update form',
+            btnDelete: '.btn-delete'
         }, config);
-        this.formCreate = document.querySelector(this.options.formCreate);
-        this.formUpdate = document.querySelector(this.options.formUpdate);
 
         this.initForms();
         this.initUpdateButtons();
         this.initDeleteButtons();
     }
 
-    initForm(forms) {
-      forms.forEach(obj => {
-        obj.form.save()
-          .then(json => this.fireEvent(obj.event, [json]))
-          .catch(err => this.fireEvent(obj.eventError, [err, obj.errorMessage]));
-      });
+    initForm(obj) {
+		obj.form.save()
+			.then(json => this.fireEvent(obj.event, [json]))
+			.catch(err => this.fireEvent(obj.eventError, [err, obj.errorMessage]));
     }
 
     initForms() {
-      this.initForm([
-        {
-          form: this.formCreate,
-          event: 'afterFormCreate',
-          eventError: 'afterFormCreateError',
-          errorMessage: this.options.errorCreateMessage
-        },
-        {
-          form: this.formUpdate,
-          event: 'afterFormUpdate',
-          eventError: 'afterFormUpdateError',
-          errorMessage: this.options.errorUpdateMessage
+      let formObj = {};
+      const { forms } = this.options;
+
+      Object.keys(forms).forEach(form => {
+        this[forms[form].name] = document.querySelector(`${forms[form].id}`);
+        formObj = {
+          form: this[forms[form].name],
+          event: `after${forms[form].name}`,
+          eventError: `after${forms[form].name}Error`,
+          errorMessage: this.options[`error${forms[form].type}Message`]
         }
-      ]);
+
+        this.initForm(formObj);
+      });
     }
 
     getTrData(event) {
@@ -74,6 +84,8 @@ class HcodeGrid {
     }
 
     initUpdateButtons() {
+		const { btnUpdateExtra } = this.options;
+
         document.querySelectorAll(this.options.btnUpdate).forEach(btn => {
           btn.addEventListener('click', e => {
             this.fireEvent('beforeUpdateClick', [e]);
@@ -81,7 +93,7 @@ class HcodeGrid {
             const data = this.getTrData(e);
             
             for (let name in data) {
-              const input = this.formUpdate.querySelector(`[name=${name}]`);
+              const input = this.FormUpdate.querySelector(`[name=${name}]`);
               if (!input) continue;
 
               this.options.onUpdateLoad(input, name, data);
@@ -89,7 +101,26 @@ class HcodeGrid {
       
             this.fireEvent('afterUpdateClick', [e]);
           });
-        });
+		});
+
+		if (btnUpdateExtra) {
+			document.querySelectorAll(btnUpdateExtra.ref).forEach(btn => {
+				btn.addEventListener('click', e => {
+					this.fireEvent(`before${btnUpdateExtra.type}Click`, [e]);
+
+					const data = this.getTrData(e);
+
+					for (let name in data) {
+						const input = document.querySelector(`[name=${name}]`);
+						if (!input) continue;
+
+						this.options.onUpdateLoad(input, name, data);
+					}
+
+					this.fireEvent(`after${btnUpdateExtra.type}Click`, [e]);
+				});
+			});
+		}
     }
 
     initDeleteButtons() {      
