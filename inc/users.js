@@ -1,8 +1,10 @@
+const Utils = require('./utils');
 const controller = require('./controller');
 
 const PAGE = 'admin/login';
 const TITLE = 'Login';
 const TABLE = 'tb_users';
+const FIELDS = ['name', 'email', 'password'];
 
 module.exports = {
     render(req, res, message, error) {
@@ -13,5 +15,10 @@ module.exports = {
     },
     getUsers() {
         return controller.getData(TABLE, 'name');
+    },
+    save(body) {
+        const dbObj = Utils.setDBObject(Utils.getSaveType(), TABLE, FIELDS, body);
+
+        return controller.save(dbObj);
     }
 }
