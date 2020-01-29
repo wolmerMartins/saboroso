@@ -127,5 +127,13 @@ router.post('/users', function(req, res, next) {
         .catch(err => res.send(err));
 });
 
+router.delete('/users/:id', function(req, res, next) {
+    let { id } = req.params;
+
+    users.delete(id)
+        .then(results => res.send(results))
+        .catch(err => res.send(err));
+});
+
 
 module.exports = router;
