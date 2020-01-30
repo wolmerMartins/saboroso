@@ -17,7 +17,7 @@ module.exports = {
         return controller.save(dbObject);
     },
     getContacts() {
-        return controller.getData(TABLE, 'name');
+        return controller.getData(TABLE, 'register DESC');
     },
     delete(id) {
         return controller.delete({ table: TABLE, id });
