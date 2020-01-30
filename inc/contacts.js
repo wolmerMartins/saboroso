@@ -15,5 +15,11 @@ module.exports = {
     save(body) {
         const dbObject = Utils.setDBObject(TABLE, FIELDS, body);
         return controller.save(dbObject);
+    },
+    getContacts() {
+        return controller.getData(TABLE, 'name');
+    },
+    delete(id) {
+        return controller.delete({ table: TABLE, id });
     }
 }
