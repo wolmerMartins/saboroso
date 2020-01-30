@@ -42,7 +42,7 @@ class HcodeGrid {
             btnDelete: '.btn-delete'
         }, config);
 
-        this.initForms();
+        if (!this.options.hasNoForms) this.initForms();
         this.initUpdateButtons();
         this.initDeleteButtons();
     }
@@ -123,7 +123,7 @@ class HcodeGrid {
 		}
     }
 
-    initDeleteButtons() {      
+    initDeleteButtons() {
         document.querySelectorAll(this.options.btnDelete).forEach(btn => {
           btn.addEventListener('click', e => {
             this.fireEvent('beforeDeleteClick');
