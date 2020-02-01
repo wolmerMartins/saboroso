@@ -8,18 +8,77 @@
         </div>
         <div class="row animate-box">
             <div class="col-md-8 col-md-offset-2">
+                <div id="subscribe-message" style="display: none;"></div>
                 <form class="form-inline">
                     <div class="col-md-6 col-sm-6">
                         <div class="form-group">
                             <label for="email" class="sr-only">E-mail</label>
-                            <input type="email" class="form-control" id="email" placeholder="Seu E-mail">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Seu E-mail">
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-6">
-                        <button type="submit" class="btn btn-default btn-block">Inscrever</button>
+                        <button type="submit" class="btn btn-default btn-block subscribe">Inscrever</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    const ALERT_DANGER = 'alert-danger';
+    const ALERT_SUCCESS = 'alert-success';
+    const subscribe = document.querySelector('.subscribe');
+
+    const setMessageType = ({ el, type }) => {
+        if (type === ALERT_SUCCESS) {
+            if (el.classList.contains(ALERT_DANGER)) {
+                el.classList.replace(ALERT_DANGER, ALERT_SUCCESS);
+                return;
+            }
+            el.classList.add(ALERT_SUCCESS);
+        } else {
+            if (el.classList.contains(ALERT_SUCCESS)) {
+                el.classList.replace(ALERT_SUCCESS, ALERT_DANGER);
+                return;
+            }
+            el.classList.add(ALERT_DANGER);
+        }
+    };
+
+    const displaySubscribeMessage = ({ message, type }) => {
+        const el = document.querySelector('#subscribe-message');
+
+        el.classList.add('alert');
+        setMessageType({ el, type });
+        el.innerHTML = message;
+        el.style.display = 'block';
+    };
+
+    const checkSubscribeResponse = response => {
+        if (response.error) {
+            displaySubscribeMessage({
+                type: ALERT_DANGER,
+                message: response.message
+            });
+        } else {
+            displaySubscribeMessage({
+                type: ALERT_SUCCESS,
+                message: response.message
+            });
+        }
+    };
+
+    subscribe.addEventListener('click', e => {
+        e.preventDefault();
+
+        const form = e.path.find(el => el.tagName === 'FORM');
+        const body = new FormData(form);
+        
+        fetch('/subscribe', {
+            method: 'post',
+            body
+        }).then(response => response.json())
+            .then(json => checkSubscribeResponse(json));
+    });
+</script>
