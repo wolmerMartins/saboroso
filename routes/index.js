@@ -4,6 +4,7 @@ var router = express.Router();
 const menu = require('../inc/menus');
 const Utils = require('../inc/utils');
 const contacts = require('../inc/contacts');
+const subscribe = require('../inc/subscribe');
 const reservations = require('../inc/reservations');
 
 const TITLE = 'Restaurante Saboroso!';
@@ -120,6 +121,17 @@ router.get('/services', function(req, res, next) {
       }
     ]
   });
+});
+
+router.post('/subscribe', function(req, res, next) {
+  if (!req.fields.email) return res.send({
+    error: true,
+    message: 'Você deve informar um endereco de e-mail'
+  });
+
+  subscribe.save(req.fields)
+    .then(results => res.send(results))
+    .catch(err => res.send(err));
 });
 
 module.exports = router;
