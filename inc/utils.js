@@ -68,6 +68,10 @@ class Utils {
     static formatDateToView(date) {
         return moment(date).format(DATE_TO_VIEW);
     }
+
+    static isValidEmail(email) {
+        return /[a-z0-9_.]+@([a-z]+\.)[a-z{2,}]+(\.([a-z]{2}))?$/.test(email);
+    }
 }
 
 module.exports = Utils;
