@@ -114,13 +114,21 @@ router.delete('/menus/:id', function(req, res, next) {
 });
 
 router.get('/reservations', function(req, res, next) {
-    reservation.getReservations().then(reservations => {
-        res.render('admin/reservations', admin.getParams(req, {
-            reservations,
-            date: {},
-            moment
-        }));
-    });
+    reservation.getReservations()
+        .then(reservations => {
+            res.render('admin/reservations', admin.getParams(req, {
+                reservations,
+                date: {},
+                moment
+            }));
+        })
+        .catch(err => {
+            res.render('admin/reservations', admin.getParams(req, {
+                reservations: [],
+                date: {},
+                moment
+            }));
+        });
 });
 
 router.post('/reservations', function(req, res, next) {
