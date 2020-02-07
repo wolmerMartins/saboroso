@@ -1,4 +1,7 @@
 const db = require('./db');
+const Pagination = require('./Pagination');
+
+let pag = null;
 
 module.exports = {
     render(req, res, page, title, h1, bg, message, error) {
@@ -50,12 +53,9 @@ module.exports = {
             });
         });
     },
-    getData(table, orderBy) {
-        return new Promise((resolve, reject) => {
-            db.query(`SELECT * FROM ${table} ORDER BY ${orderBy}`, (err, results) => {
-                if (err) reject(err);
-                resolve(results);
-            });
-        });
+    getData(table, orderBy, page, perPage) {
+        if (!pag) pag = new Pagination({ table, orderBy });
+
+        return pag.getPage(page, perPage);
     }
 }
