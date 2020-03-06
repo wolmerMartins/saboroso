@@ -12,8 +12,8 @@ module.exports = {
     render(req, res, message, error) {
         controller.render(req, res, PAGE, TITLE, SUBTITLE, BACKGROUND, message, error);
     },
-    getReservations(page, perPage) {
-        return controller.getData(TABLE, 'date', page, perPage);
+    getReservations({ page, perPage, dateStart, dateEnd }) {
+        return controller.getData(TABLE, 'date', page, perPage, dateStart, dateEnd);
     },
     save(body) {
         let dbObj = {};
