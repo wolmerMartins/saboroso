@@ -114,12 +114,23 @@ router.delete('/menus/:id', function(req, res, next) {
 });
 
 router.get('/reservations', function(req, res, next) {
-    reservation.getReservations()
-        .then(reservations => {
+    const {
+        page,
+        end: dateEnd,
+        limit: perPage,
+        start: dateStart
+    } = req.query;
+
+    const start = (dateStart) ? moment(dateStart).format('YYYY-MM-DD') : null;
+    const end = (dateEnd) ? moment(dateEnd).format('YYYY-MM-DD') : null;
+
+    reservation.getReservations({ page, dateStart, dateEnd, perPage })
+        .then(({ data, links }) => {
             res.render('admin/reservations', admin.getParams(req, {
-                reservations,
-                date: {},
-                moment
+                date: { start, end },
+                reservations: data,
+                moment,
+                links
             }));
         })
         .catch(err => {
