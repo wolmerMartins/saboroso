@@ -142,6 +142,15 @@ router.get('/reservations', function(req, res, next) {
         });
 });
 
+router.get('/reservations/chart', function(req, res, next) {
+    const { start, end } = req.query;
+
+    reservation.chart({ start, end })
+        .then(chartData => {
+            res.send(chartData);
+        });
+});
+
 router.post('/reservations', function(req, res, next) {
     reservation.save(req.fields, req.files)
         .then(results => res.send(results))
