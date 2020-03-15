@@ -72,6 +72,10 @@ class Utils {
     static isValidEmail(email) {
         return /[a-z0-9_.]+@([a-z]+\.)[a-z{2,}]+(\.([a-z]{2}))?$/.test(email);
     }
+
+    static isEmptyJson(json) {
+        return !json || JSON.stringify(json) === '{}';
+    }
 }
 
 module.exports = Utils;
