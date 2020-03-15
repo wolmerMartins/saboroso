@@ -73,7 +73,7 @@ module.exports = {
         });
     },
     getData(table, orderBy, page, perPage, dateStart, dateEnd) {
-        if (!pag) pag = new Pagination({ table, orderBy });
+        pag = new Pagination({ table, orderBy });
 
         return pag.getPage(page, perPage, dateStart, dateEnd);
     },

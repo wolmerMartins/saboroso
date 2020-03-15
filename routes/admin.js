@@ -29,9 +29,10 @@ router.use(function(req, res, next) {
 });
 
 router.get('/contacts', function(req, res, next) {
-    contacts.getContacts().then(contacts => {
+    contacts.getContacts().then(({ data, links }) => {
         res.render('admin/contacts', admin.getParams(req, {
-            contacts
+            contacts: data,
+            links
         }));
     });
 });
@@ -45,8 +46,11 @@ router.delete('/contacts/:id', function(req, res, next) {
 });
 
 router.get('/emails', function(req, res, next) {
-    email.getEmails().then(emails => {
-        res.render('admin/emails', admin.getParams(req, { emails }));
+    email.getEmails().then(({ data, links }) => {
+        res.render('admin/emails', admin.getParams(req, {
+            emails: data,
+            links
+        }));
     });
 });
 
@@ -93,8 +97,11 @@ router.get('/logout', function(req, res, next) {
 });
 
 router.get('/menus', function(req, res, next) {
-    menu.getMenus().then(data => {
-        res.render('admin/menus', admin.getParams(req, { rows: data }));
+    menu.getMenus().then(({ data, links }) => {
+        res.render('admin/menus', admin.getParams(req, {
+            rows: data,
+            links
+        }));
     }).catch(err => {
         console.error(err);
         res.render('admin/menus', admin.getParams(req, { rows: [] }));
@@ -166,9 +173,10 @@ router.delete('/reservations/:id', function(req, res, next) {
 });
 
 router.get('/users', function(req, res, next) {
-    users.getUsers().then(users => {
+    users.getUsers().then(({ data, links }) => {
         res.render('admin/users', admin.getParams(req, {
-            users
+            users: data,
+            links
         }));
     });
 });

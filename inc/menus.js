@@ -1,6 +1,5 @@
 const path = require('path');
 
-const db = require('./db');
 const Utils = require('./utils');
 const controller = require('./controller');
 
@@ -9,12 +8,7 @@ const MENU_FIELDS = ['title', 'description', 'price', 'photo'];
 
 module.exports = {
     getMenus: () => {
-        return new Promise((resolve, reject) => {
-            db.query('SELECT * FROM tb_menus ORDER BY title', (err, results) => {
-                if (err) reject(err);
-                resolve(results);
-            });
-        })
+        return controller.getData(MENU_TABLE, 'title');
     },
     save(fields, files) {
         let dbObj;
