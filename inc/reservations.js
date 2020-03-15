@@ -29,5 +29,8 @@ module.exports = {
     },
     delete(id) {
         return controller.delete({ table: TABLE, id });
+    },
+    chart(dates) {
+        return controller.chart(dates);
     }
 }
