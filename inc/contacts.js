@@ -13,7 +13,7 @@ module.exports = {
         controller.render(req, res, PAGE, TITLE, SUBTITLE, BACKGROUND, message, error);
     },
     save(body) {
-        const dbObject = Utils.setDBObject(TABLE, FIELDS, body);
+        const dbObject = Utils.setDBObject(Utils.getSaveType(), TABLE, FIELDS, body);
         return controller.save(dbObject);
     },
     getContacts() {

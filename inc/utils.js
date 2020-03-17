@@ -62,7 +62,8 @@ class Utils {
     }
 
     static formatDateToBD(date) {
-        return moment(date).format(DATE_TO_DB);
+        const [day, month, year] = date.split('/');
+        return `${year}-${month}-${day}`;
     }
 
     static formatDateToView(date) {

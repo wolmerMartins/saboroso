@@ -17,7 +17,7 @@ module.exports = {
     },
     save(body) {
         let dbObj = {};
-        if (~body.date.indexOf('/')) body.date = Utils.formatUSDateToDB(body.date);
+        if (~body.date.indexOf('/')) body.date = Utils.formatDateToBD(body.date);
 
         if (body.id) {
             dbObj = Utils.setDBObject(Utils.getUpdateType(), TABLE, body);
