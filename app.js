@@ -11,14 +11,14 @@ var path = require('path');
 var http = require('http');
 var socket = require('socket.io');
 
-var indexRouter = require('./routes/index');
-var adminRouter = require('./routes/admin');
-
 var app = express();
 var http = http.Server(app);
 var io = socket(http);
 
-io.on('connection', socket => console.log('Novo usuário conectado!', socket));
+io.on('connection', socket => console.log('Novo usuário conectado!'));
+
+var indexRouter = require('./routes/index')(io);
+var adminRouter = require('./routes/admin')(io);
 
 var client = redis.createClient({
   host: 'localhost',
@@ -26,18 +26,19 @@ var client = redis.createClient({
 });
 
 app.use(function(req, res, next) {
-  if (req.method === 'POST') {
-    if (['/admin/login'].includes(req.url)) return next();
+  req.body = {};
 
+  if (req.method === 'POST') {
     var form = formidable.IncomingForm({
       uploadDir: path.join(__dirname, '/public/images'),
       keepExtensions: true
     });
 
-    form.parse(req, function(err, fields, files) {
+    form.parse(req, (err, fields, files) => {
+      req.body = fields;
       req.fields = fields;
       req.files = files;
-
+  
       next();
     });
   } else {
@@ -57,8 +58,6 @@ app.use(session({
 }));
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
